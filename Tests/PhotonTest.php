@@ -155,6 +155,20 @@ class PhotonTest extends BaseTestCase
         $this->assertEquals('United States', $results->first()->getCountry());
     }
 
+    public function testGeocodeQueryWithStreetNameResult()
+    {
+        $provider = Photon::withKomootServer($this->getHttpClient());
+        $results = $provider->geocodeQuery(GeocodeQuery::create('Dickens Avenue, Canterbury, England'));
+
+        $this->assertInstanceOf('Geocoder\Model\AddressCollection', $results);
+
+        /** @var PhotonAddress $result */
+        $result = $results->first();
+
+        $this->assertEquals('Dickens Avenue', $result->getName());
+        $this->assertEquals('Dickens Avenue', $result->getStreetName());
+    }
+
     public function testReverseQuery(): void
     {
         $provider = Photon::withKomootServer($this->getHttpClient());
